@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Atención Médica · Famosa</title>
+<style>
+  :root{
+    --rojo-famosa:#DD091D;
+    --rojo-oscuro:#A80716;
+    --amarillo-famosa:#FFED00;
+    --negro:#1A1A1A;
+    --gris-texto:#5A5A5A;
+    --fondo:#FAF9F6;
+    --blanco:#FFFFFF;
+    --borde:#E8E4DC;
+    --verde-ok:#2E7D5B;
+    --rojo-error:#B23A3A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--fondo);
+    color:var(--negro);
+    min-height:100vh;
+  }
+
+  /* ===== PANTALLA DE BIENVENIDA ===== */
+  #bienvenida{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .esquina{position:absolute;pointer-events:none;z-index:0;}
+  .esquina-tl{top:0;left:0;width:260px;height:190px;}
+  .esquina-br{bottom:0;right:0;width:260px;height:190px;transform:rotate(180deg);}
+  .puntos{position:absolute;width:150px;height:150px;pointer-events:none;z-index:0;
+    background-image:radial-gradient(circle, #D8D2C4 1.6px, transparent 1.6px);
+    background-size:16px 16px;opacity:.55;}
+  .puntos-tr{top:26px;right:26px;}
+  .puntos-bl{bottom:26px;left:26px;}
+
+  .marca-logo{height:118px;margin-bottom:22px;position:relative;z-index:1;}
+
+  .bienvenida-card{
+    position:relative;z-index:1;
+    background:var(--blanco);
+    border-radius:20px;
+    box-shadow:0 12px 32px rgba(26,26,26,.08);
+    padding:38px 34px 34px;
+    max-width:360px;
+    width:100%;
+  }
+  .icono-badge{
+    width:64px;height:64px;border-radius:50%;
+    background:#FDEAEA;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 18px;
+  }
+  .icono-badge svg{width:30px;height:30px;}
+  #bienvenida h1{
+    font-size:24px;margin:0 0 14px;color:var(--negro);font-weight:800;
+  }
+  #bienvenida h1 span{color:var(--rojo-famosa);}
+  .divisor{
+    display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;
+  }
+  .divisor::before, .divisor::after{content:'';height:1px;width:52px;background:var(--borde);}
+  .divisor .punto{width:6px;height:6px;border-radius:50%;background:var(--amarillo-famosa);}
+  #bienvenida p{
+    font-size:14px;color:var(--gris-texto);margin:0 0 26px;line-height:1.5;
+  }
+  .btn-principal{
+    background:var(--rojo-famosa);
+    color:white;
+    border:none;
+    padding:16px 20px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.01em;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(221,9,29,.28);
+    transition:.15s;
+    width:100%;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    white-space:nowrap;
+  }
+  .btn-principal svg{width:18px;height:18px;flex-shrink:0;}
+  .btn-principal:hover{background:var(--rojo-oscuro);}
+  .btn-principal:active{transform:scale(.98);}
+
+  .confianza{
+    position:relative;z-index:1;
+    display:flex;gap:26px;margin-top:30px;flex-wrap:wrap;justify-content:center;max-width:380px;
+  }
+  .confianza-item{display:flex;flex-direction:column;align-items:center;gap:8px;width:100px;}
+  .confianza-item .circulo{
+    width:40px;height:40px;border-radius:50%;background:#FDEAEA;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .confianza-item .circulo svg{width:18px;height:18px;}
+  .confianza-item span{font-size:11px;color:var(--gris-texto);line-height:1.35;font-weight:500;}
+
+  .copyright{
+    position:relative;z-index:1;
+    font-size:11px;color:#B7B2A6;margin-top:32px;
+  }
+
+  .franja-inferior{
+    position:fixed;bottom:0;left:0;right:0;
+    height:6px;background:var(--amarillo-famosa);
+  }
+
+  /* ===== FORMULARIO ===== */
+  #formularioScreen{display:none;}
+  .card{
+    width:100%;
+    max-width:460px;
+    margin:0 auto;
+    padding:0 0 50px;
+  }
+  .encabezado{
+    position:relative;
+    background:var(--rojo-famosa);
+    padding:20px 22px 40px;
+    text-align:center;
+    overflow:hidden;
+    border-bottom-left-radius:26px 16px;
+    border-bottom-right-radius:26px 16px;
+  }
+  .encabezado::after{
+    content:'';position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--amarillo-famosa);
+    border-bottom-left-radius:26px 16px;border-bottom-right-radius:26px 16px;
+  }
+  .encabezado .puntos{position:absolute;width:110px;height:110px;opacity:.5;
+    background-image:radial-gradient(circle, rgba(255,255,255,.5) 1.4px, transparent 1.4px);
+    background-size:14px 14px;}
+  .encabezado .puntos-tl{top:6px;left:-10px;}
+  .encabezado .icono-fondo{position:absolute;top:14px;right:-6px;width:100px;height:100px;opacity:.15;}
+  .btn-volver{
+    position:absolute;left:16px;top:16px;z-index:2;
+    background:rgba(255,255,255,.15);
+    border:none;color:white;
+    width:34px;height:34px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .btn-volver svg{width:18px;height:18px;}
+  .encabezado img{height:44px;margin:0 auto 12px;position:relative;z-index:1;}
+  .encabezado h2{font-size:19px;color:var(--blanco);margin:0 0 4px;font-weight:800;position:relative;z-index:1;}
+  .encabezado span{display:block;font-size:13px;color:var(--amarillo-famosa);font-weight:700;margin-bottom:12px;position:relative;z-index:1;}
+  .encabezado .mini-divisor{width:44px;height:3px;background:var(--amarillo-famosa);border-radius:2px;margin:0 auto;position:relative;z-index:1;}
+
+  form{
+    background:var(--blanco);
+    border-radius:20px;
+    padding:26px 22px 30px;
+    box-shadow:0 10px 28px rgba(26,26,26,.07);
+    margin:-22px 18px 0;
+    position:relative;
+    z-index:1;
+  }
+  .paso-label{
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:22px;
+  }
+  .paso-label .icono-mini{
+    width:38px;height:38px;border-radius:10px;background:#FDEAEA;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .paso-label .icono-mini svg{width:18px;height:18px;}
+  .paso-label .texto{
+    font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--rojo-famosa);font-weight:800;
+    border-left:3px solid var(--amarillo-famosa);
+    padding-left:9px;
+  }
+
+  .campo{display:flex;gap:12px;margin-bottom:16px;align-items:flex-start;}
+  .campo .icono-campo{
+    width:38px;height:38px;border-radius:10px;background:#FDEAEA;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:22px;
+  }
+  .campo .icono-campo svg{width:17px;height:17px;}
+  .campo-contenido{flex:1;min-width:0;}
+
+  label{
+    display:block;font-size:13px;font-weight:600;margin:0 0 6px;color:var(--negro);
+  }
+  label.req::after{content:" *";color:var(--rojo-famosa);}
+  input[type=text], select, input[type=number]{
+    width:100%;padding:11px 12px;border:1.5px solid var(--borde);border-radius:10px;
+    font-size:14.5px;background:var(--fondo);color:var(--negro);
+  }
+  input:focus, select:focus{outline:none;border-color:var(--rojo-famosa);background:var(--blanco);}
+
+  .genero-opciones{display:flex;gap:10px;}
+  .genero-opciones label{
+    flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:12px 8px;border:1.5px solid var(--borde);border-radius:10px;
+    background:var(--fondo);cursor:pointer;font-weight:600;font-size:13.5px;
+  }
+  .genero-opciones label svg{width:16px;height:16px;stroke:#9AA0A6;}
+  .genero-opciones input{position:absolute;opacity:0;width:0;height:0;}
+  .genero-opciones label.activo{border-color:var(--rojo-famosa);background:#FFF1F2;color:var(--rojo-famosa);}
+  .genero-opciones label.activo svg{stroke:var(--rojo-famosa);}
+
+  .motivo-fijo{
+    background:#FFF6D6;
+    border:1.5px solid var(--amarillo-famosa);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:14px;
+    font-weight:700;
+    color:var(--negro);
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+  .motivo-fijo .check{
+    margin-left:auto;width:20px;height:20px;border-radius:50%;
+    background:var(--amarillo-famosa);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .motivo-fijo .check svg{width:12px;height:12px;stroke:var(--negro);}
+
+  button[type=submit]{
+    width:100%;margin-top:24px;padding:15px;border:none;border-radius:12px;
+    background:var(--rojo-famosa);color:white;font-size:15px;font-weight:800;
+    letter-spacing:.01em;cursor:pointer;transition:.15s;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+  }
+  button[type=submit] svg{width:17px;height:17px;flex-shrink:0;}
+  button[type=submit]:hover:not(:disabled){background:var(--rojo-oscuro);}
+  button[type=submit]:disabled{background:#D9B8BC;cursor:not-allowed;}
+  button[type=submit]:not(:disabled):active{transform:scale(.98);}
+
+  .btn-volver-abajo{
+    width:100%;margin-top:12px;padding:13px;border:1.5px solid var(--borde);border-radius:12px;
+    background:var(--blanco);color:var(--gris-texto);font-size:14px;font-weight:700;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;
+  }
+  .btn-volver-abajo svg{width:16px;height:16px;stroke:var(--gris-texto);flex-shrink:0;}
+  .btn-volver-abajo:hover{border-color:var(--rojo-famosa);color:var(--rojo-famosa);}
+  .btn-volver-abajo:hover svg{stroke:var(--rojo-famosa);}
+
+  .msg{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13.5px;display:none;}
+  .msg.ok{background:#EAF6F0;color:var(--verde-ok);display:block;}
+  .msg.error{background:#FBEAEA;color:var(--rojo-error);display:block;}
+  .nota{
+    font-size:12px;color:var(--gris-texto);margin-top:16px;line-height:1.5;text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .nota svg{width:14px;height:14px;stroke:var(--rojo-famosa);flex-shrink:0;}
+
+  .confianza-form{
+    display:flex;gap:22px;margin-top:34px;flex-wrap:wrap;justify-content:center;padding:0 18px;
+  }
+  .confianza-form .confianza-item{width:auto;max-width:150px;flex-direction:row;text-align:left;gap:10px;}
+  .confianza-form .confianza-item .circulo{flex-shrink:0;}
+  .confianza-form .confianza-item .titulo{font-size:12.5px;font-weight:700;color:var(--negro);display:block;}
+  .confianza-form .confianza-item .desc{font-size:11px;color:var(--gris-texto);}
+
+  .copyright-form{font-size:11px;color:#B7B2A6;margin-top:30px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- ===== PANTALLA DE BIENVENIDA ===== -->
+<div id="bienvenida">
+  <svg class="esquina esquina-tl" viewBox="0 0 300 200" preserveAspectRatio="none">
+    <path d="M0,0 H300 C175,20 55,95 0,200 Z" fill="#FFED00"/>
+    <path d="M0,0 H278 C160,18 50,88 0,182 Z" fill="#DD091D"/>
+  </svg>
+  <svg class="esquina esquina-br" viewBox="0 0 300 200" preserveAspectRatio="none">
+    <path d="M0,0 H300 C175,20 55,95 0,200 Z" fill="#FFED00"/>
+    <path d="M0,0 H278 C160,18 50,88 0,182 Z" fill="#DD091D"/>
+  </svg>
+  <div class="puntos puntos-tr"></div>
+  <div class="puntos puntos-bl"></div>
+
+  <img class="marca-logo" src="img/logo-famosa.png" alt="Famosa">
+
+  <div class="bienvenida-card">
+    <div class="icono-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 3v6a4.5 4.5 0 0 0 9 0V3"/>
+        <path d="M9 3v1.5M15 3v1.5"/>
+        <path d="M13.5 9v3a5.5 5.5 0 0 0 11 0v-1.2"/>
+        <circle cx="21.5" cy="9.3" r="1.6"/>
+      </svg>
+    </div>
+    <h1>Bienvenido, <span>Doctor</span></h1>
+    <div class="divisor"><span class="punto"></span></div>
+    <p>Sistema de registro de atenciones del consultorio médico laboral.</p>
+    <button class="btn-principal" onclick="mostrarFormulario()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="17" rx="3"/>
+        <path d="M3 9h18"/>
+        <path d="M12 12v6M9 15h6"/>
+      </svg>
+      Registrar Atención Médica
+    </button>
+  </div>
+
+  <div class="confianza">
+    <div class="confianza-item">
+      <div class="circulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
+        </svg>
+      </div>
+      <span>Seguro y Confidencial</span>
+    </div>
+    <div class="confianza-item">
+      <div class="circulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3.5 2"/>
+        </svg>
+      </div>
+      <span>Atención Ágil y Eficiente</span>
+    </div>
+    <div class="confianza-item">
+      <div class="circulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3"/>
+          <path d="M2.5 20a6.5 6.5 0 0 1 13 0"/>
+          <circle cx="17.5" cy="9" r="2.3"/>
+          <path d="M15.5 12.2c2.7.4 4.5 2.3 4.9 5.3"/>
+        </svg>
+      </div>
+      <span>Comprometidos con tu Bienestar</span>
+    </div>
+  </div>
+
+  <p class="copyright">© 2026 FAMOSA. Todos los derechos reservados.</p>
+</div>
+<div class="franja-inferior"></div>
+
+<!-- ===== FORMULARIO ===== -->
+<div id="formularioScreen">
+  <div class="card">
+    <div class="encabezado">
+      <div class="puntos puntos-tl"></div>
+      <svg class="icono-fondo" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.2">
+        <path d="M20.8 8.6c0-3-2.5-4.6-4.8-4.6-1.6 0-3 .8-4 2-1-1.2-2.4-2-4-2-2.3 0-4.8 1.6-4.8 4.6 0 5.4 8.8 10.4 8.8 10.4s8.8-5 8.8-10.4z"/>
+      </svg>
+      <button class="btn-volver" onclick="mostrarBienvenida()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <img src="img/logo-famosa.png" alt="Famosa">
+      <h2>Registro de Atención Médica</h2>
+      <span>Datos del personal atendido</span>
+      <div class="mini-divisor"></div>
+    </div>
+
+    <form id="formRegistro">
+      <div class="paso-label">
+        <div class="icono-mini">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+          </svg>
+        </div>
+        <div class="texto">Datos del personal atendido</div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Nombre completo</label>
+          <input type="text" id="nombre" placeholder="Escribe el nombre completo" required>
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <circle cx="8.5" cy="12" r="1.8"/>
+            <path d="M13 10h5M13 14h5"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Número de Carnet de Identidad</label>
+          <input type="text" id="ci" placeholder="Escribe el número de carnet" required>
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo" style="margin-top:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Género</label>
+          <div class="genero-opciones" id="generoOpciones">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+              <input type="radio" name="genero" value="Femenino" required> Femenino
+            </label>
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>
+              <input type="radio" name="genero" value="Masculino" required> Masculino
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="7" width="16" height="13" rx="2"/>
+            <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Área</label>
+          <select id="area" required>
+            <option value="" disabled selected>Seleccionar área</option>
+            <option>Almacén Afrecho</option>
+            <option>Almacén General Meri</option>
+            <option>Administración</option>
+            <option>Analista de Datos</option>
+            <option>Cartera</option>
+            <option>Control de Calidad</option>
+            <option>Contabilidad</option>
+            <option>Departamento Agrícola</option>
+            <option>Envasado de Fideo</option>
+            <option>Envasado de Harina</option>
+            <option>Fábrica de Fideos I</option>
+            <option>Fábrica de Fideos II</option>
+            <option>Coordinador de Producción</option>
+            <option>Inocuidad Alimentaria</option>
+            <option>Investigación y Desarrollo</option>
+            <option>Legal</option>
+            <option>Logística y Transporte</option>
+            <option>Mantenimiento y Proyectos</option>
+            <option>Marketing</option>
+            <option>Medicina Laboral</option>
+            <option>Molino</option>
+            <option>Maestranza</option>
+            <option>Almacén de Producto Terminado</option>
+            <option>Recursos Humanos</option>
+            <option>Servicios Silos</option>
+            <option>Sistema Integrado de Gestión</option>
+            <option>Sistemas y Redes</option>
+            <option>Comercial</option>
+            <option>Sucursal Warnes</option>
+            <option>Sucursal Cochabamba</option>
+            <option>Sucursal El Alto</option>
+            <option>Sucursal Sucre</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="5" width="16" height="4" rx="1"/>
+            <path d="M6 9v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9"/>
+            <path d="M10 13h4"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Cargo</label>
+          <input type="text" id="cargo" placeholder="Escribir el cargo" required>
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="10" height="18" rx="1"/>
+            <path d="M14 8h6v13h-6"/>
+            <path d="M7 7h1M10 7h1M7 11h1M10 11h1M7 15h1M10 15h1"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Empresa</label>
+          <select id="empresa" required>
+            <option value="" disabled selected>Seleccionar empresa</option>
+            <option>FAMOSA</option>
+            <option>NAIT</option>
+            <option>CH</option>
+            <option>PEÑA</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Motivo de consulta</label>
+      <div class="motivo-fijo">
+        🩺 Examen preocupacional
+        <span class="check">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </span>
+      </div>
+
+      <div class="campo" style="margin-top:16px;">
+        <div class="icono-campo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="2"/>
+            <path d="M3 9h18M8 3v3M16 3v3"/>
+          </svg>
+        </div>
+        <div class="campo-contenido">
+          <label class="req">Duración aproximada (minutos)</label>
+          <input type="number" id="duracion" min="1" placeholder="Ej: 30" required>
+        </div>
+      </div>
+
+      <button type="submit" id="btnEnviar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="17" rx="3"/>
+          <path d="M3 9h18"/>
+          <path d="M12 12v6M9 15h6"/>
+        </svg>
+        Continuar Registro
+      </button>
+      <div class="msg" id="msg"></div>
+
+      <button type="button" class="btn-volver-abajo" onclick="mostrarBienvenida()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al inicio
+      </button>
+
+      <p class="nota">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
+        Tu información está segura y será tratada con estricta confidencialidad.
+      </p>
+    </form>
+
+    <div class="confianza-form">
+      <div class="confianza-item">
+        <div class="circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>
+        </div>
+        <div>
+          <span class="titulo">Seguro y confidencial</span>
+          <span class="desc">Protegemos tu información personal.</span>
+        </div>
+      </div>
+      <div class="confianza-item">
+        <div class="circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        </div>
+        <div>
+          <span class="titulo">Atención ágil y eficiente</span>
+          <span class="desc">Procesos rápidos para tu comodidad.</span>
+        </div>
+      </div>
+      <div class="confianza-item">
+        <div class="circulo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.3"/><path d="M15.5 12.2c2.7.4 4.5 2.3 4.9 5.3"/></svg>
+        </div>
+        <div>
+          <span class="titulo">Comprometidos con tu bienestar</span>
+          <span class="desc">Cuidamos de nuestra gente.</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="copyright-form">© 2026 FAMOSA. Todos los derechos reservados.</p>
+  </div>
+</div>
+
+<script>
+// ⚠️ Reemplazar con la URL de implementación del Apps Script (Codigo.gs)
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbw68kCv6xUQ_zdZeuoWBI4d5QVcRH4cOafyM-n4dIVdyYZGbQl_cj0nJ7dBzWElzW6rXA/exec";
+
+function mostrarFormulario() {
+  document.getElementById('bienvenida').style.display = 'none';
+  document.querySelector('.franja-inferior').style.display = 'none';
+  document.getElementById('formularioScreen').style.display = 'block';
+}
+function mostrarBienvenida() {
+  document.getElementById('formularioScreen').style.display = 'none';
+  document.getElementById('bienvenida').style.display = 'flex';
+  document.querySelector('.franja-inferior').style.display = 'block';
+}
+
+// resaltar la opción de género seleccionada
+document.querySelectorAll('#generoOpciones input').forEach(input => {
+  input.addEventListener('change', () => {
+    document.querySelectorAll('#generoOpciones label').forEach(l => l.classList.remove('activo'));
+    input.closest('label').classList.add('activo');
+  });
+});
+
+document.getElementById('formRegistro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnEnviar');
+  const msg = document.getElementById('msg');
+  msg.className = 'msg';
+  msg.textContent = '';
+
+  const generoSeleccionado = document.querySelector('#generoOpciones input:checked');
+
+  const payload = {
+    nombre: document.getElementById('nombre').value.trim(),
+    ci: document.getElementById('ci').value.trim(),
+    genero: generoSeleccionado ? generoSeleccionado.value : '',
+    area: document.getElementById('area').value,
+    cargo: document.getElementById('cargo').value,
+    empresa: document.getElementById('empresa').value,
+    motivo: 'Examen preocupacional',
+    duracion: document.getElementById('duracion').value || ''
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  try {
+    const res = await fetch(ENDPOINT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.status === 'ok') {
+      msg.className = 'msg ok';
+      msg.textContent = '✓ Atención registrada correctamente.';
+      document.getElementById('formRegistro').reset();
+      document.querySelectorAll('#generoOpciones label').forEach(l => l.classList.remove('activo'));
+    } else {
+      throw new Error(data.message || 'Error desconocido');
+    }
+  } catch (err) {
+    msg.className = 'msg error';
+    msg.textContent = 'No se pudo registrar. Verifica tu conexión e intenta de nuevo.';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18"/><path d="M12 12v6M9 15h6"/></svg> Continuar Registro`;
+  }
+});
+</script>
+</body>
+</html>
