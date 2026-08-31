@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro de Atención Médica · Famosa</title>
+<title>Registro de Atención Preocupacional · Famosa</title>
 <style>
   :root{
     --rojo-famosa:#DD091D;
@@ -359,7 +359,7 @@
         </svg>
       </button>
       <img src="img/logo-famosa.png" alt="Famosa">
-      <h2>Registro de Atención Médica</h2>
+      <h2>Registro de Atención Preocupacional</h2>
       <span>Datos del personal atendido</span>
       <div class="mini-divisor"></div>
     </div>
@@ -391,48 +391,12 @@
       <div class="campo">
         <div class="icono-campo">
           <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="5" width="18" height="14" rx="2"/>
-            <circle cx="8.5" cy="12" r="1.8"/>
-            <path d="M13 10h5M13 14h5"/>
-          </svg>
-        </div>
-        <div class="campo-contenido">
-          <label class="req">Número de Carnet de Identidad</label>
-          <input type="text" id="ci" placeholder="Escribe el número de carnet" required>
-        </div>
-      </div>
-
-      <div class="campo">
-        <div class="icono-campo" style="margin-top:0;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
-          </svg>
-        </div>
-        <div class="campo-contenido">
-          <label class="req">Género</label>
-          <div class="genero-opciones" id="generoOpciones">
-            <label>
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
-              <input type="radio" name="genero" value="Femenino" required> Femenino
-            </label>
-            <label>
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>
-              <input type="radio" name="genero" value="Masculino" required> Masculino
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="campo">
-        <div class="icono-campo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4" y="7" width="16" height="13" rx="2"/>
             <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
         </div>
         <div class="campo-contenido">
-          <label class="req">Área</label>
+          <label class="req">Área de Ingreso</label>
           <select id="area" required>
             <option value="" disabled selected>Seleccionar área</option>
             <option>Almacén Afrecho</option>
@@ -474,20 +438,6 @@
       <div class="campo">
         <div class="icono-campo">
           <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="5" width="16" height="4" rx="1"/>
-            <path d="M6 9v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9"/>
-            <path d="M10 13h4"/>
-          </svg>
-        </div>
-        <div class="campo-contenido">
-          <label class="req">Cargo</label>
-          <input type="text" id="cargo" placeholder="Escribir el cargo" required>
-        </div>
-      </div>
-
-      <div class="campo">
-        <div class="icono-campo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4" y="3" width="10" height="18" rx="1"/>
             <path d="M14 8h6v13h-6"/>
             <path d="M7 7h1M10 7h1M7 11h1M10 11h1M7 15h1M10 15h1"/>
@@ -502,27 +452,6 @@
             <option>CH</option>
             <option>PEÑA</option>
           </select>
-        </div>
-      </div>
-
-      <label>Motivo de consulta</label>
-      <div class="motivo-fijo">
-        🩺 Examen preocupacional
-        <span class="check">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        </span>
-      </div>
-
-      <div class="campo" style="margin-top:16px;">
-        <div class="icono-campo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#DD091D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="17" rx="2"/>
-            <path d="M3 9h18M8 3v3M16 3v3"/>
-          </svg>
-        </div>
-        <div class="campo-contenido">
-          <label class="req">Duración aproximada (minutos)</label>
-          <input type="number" id="duracion" min="1" placeholder="Ej: 30" required>
         </div>
       </div>
 
@@ -596,14 +525,6 @@ function mostrarBienvenida() {
   document.querySelector('.franja-inferior').style.display = 'block';
 }
 
-// resaltar la opción de género seleccionada
-document.querySelectorAll('#generoOpciones input').forEach(input => {
-  input.addEventListener('change', () => {
-    document.querySelectorAll('#generoOpciones label').forEach(l => l.classList.remove('activo'));
-    input.closest('label').classList.add('activo');
-  });
-});
-
 document.getElementById('formRegistro').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = document.getElementById('btnEnviar');
@@ -611,17 +532,10 @@ document.getElementById('formRegistro').addEventListener('submit', async (e) => 
   msg.className = 'msg';
   msg.textContent = '';
 
-  const generoSeleccionado = document.querySelector('#generoOpciones input:checked');
-
   const payload = {
     nombre: document.getElementById('nombre').value.trim(),
-    ci: document.getElementById('ci').value.trim(),
-    genero: generoSeleccionado ? generoSeleccionado.value : '',
     area: document.getElementById('area').value,
-    cargo: document.getElementById('cargo').value,
-    empresa: document.getElementById('empresa').value,
-    motivo: 'Examen preocupacional',
-    duracion: document.getElementById('duracion').value || ''
+    empresa: document.getElementById('empresa').value
   };
 
   btn.disabled = true;
@@ -638,7 +552,6 @@ document.getElementById('formRegistro').addEventListener('submit', async (e) => 
       msg.className = 'msg ok';
       msg.textContent = '✓ Atención registrada correctamente.';
       document.getElementById('formRegistro').reset();
-      document.querySelectorAll('#generoOpciones label').forEach(l => l.classList.remove('activo'));
     } else {
       throw new Error(data.message || 'Error desconocido');
     }
